@@ -1,0 +1,9 @@
+Scheduled | Unscheduled view of time. Starts with 24 hours unscheduled,
+as tasks are added with target time, that time goes towards scheduled.
+Two matters: Scheduling target times, and recording what happened.
+Goal: avoid unrecorded time as much as possible. I can have 24 hours unscheduled,
+but record most of the day. That is done via stopwatches with no target time.
+Target time means scheduled, going in it with a plan. No target time
+means we are doing something with no planned out time amount to do it,
+and just recording what happens. Question: should I tolerate going above
+the target time? 

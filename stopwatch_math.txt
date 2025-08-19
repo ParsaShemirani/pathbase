@@ -7,3 +7,5 @@ Target time means scheduled, going in it with a plan. No target time
 means we are doing something with no planned out time amount to do it,
 and just recording what happens. Question: should I tolerate going above
 the target time? 
+
+Approach: Start as just a recorder, then add scheudling/target logic as beneficial. But first start with just recorder logic.

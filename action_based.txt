@@ -1,0 +1,20 @@
+New idea:
+
+Instead of seperate entities like events, actions, planned action,
+I will just have action.
+
+An action will be a single entitity.
+In a scenario when it is created and recorded in the course
+of a day, it will only have the 'recorded_duration' attribute
+and of course the date. 
+
+If we planned it from before to spend a certain amount
+of time on it, it will have a date and 'planned_duration'
+attribtute, and then when the day comes, we will record it
+and add the 'recorded_duration' attribute.
+
+If we planeed it from before and it is important to do it
+at a certain time in the day, it will have a date,
+'time_frame' attribute (or start/end time), and also
+a 'planned_duration' attribute. Then the 'recorded_duration'
+will be added on the day of. 

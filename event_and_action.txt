@@ -1,7 +1,7 @@
 Action: Duration based
 Event: Start/end timestamp based.
 
-Scenarios:
+Scenario:
 
 "Tonight, I'm planning to sleep from 9 PM to 5 PM".
 
@@ -11,3 +11,69 @@ Event: Sleep | Start: 2025-08-20 00:00:00.00 | End: 2025-08-19 05:00:00.00
 
 Scheduled Action: Sleep | Date: 2025-08-19 | Duration: 03:59:59.99
 Scheduled Action: Sleep | Date: 2025-08-20 | Duration: 05:00:00.00
+
+
+Then, on the 19th, we can start the stopwatch for 'sleep' when I am heading for bed,
+and we set tomorrows scheduled 'sleep' stopwatch to be the one that starts
+when the new day starts.
+
+Thought: Should the scheduled action and the recorded kind of action be seperate or rather
+one row in the database with different columns, scheduled_duration | recorded_duration
+
+Idea: scheduled_duration | recorded_duration
+
+scheduled_duration | actual_duration Potentially?
+
+
+Scenario:
+
+"I plan to read sample book 1 for 30 minutes tomorrow"
+
+Implementation:
+Scheduled Action: Read sample book 1 | Date: 2025-08-20 | Duration: 00:30:00.00
+
+Then, on the 20th, throught he day I may pick up the book, each time switching
+the active stopwatch to the 'Read sample book 1' stopwatch. And at the end of the day,
+it will save that 'recorded' value of time which I actually spent on it.
+
+Scenario:
+"My friend James said there is a gathering at his house from 5PM to 10PM on august 28th.
+I only want to stay for 2 hours or so and then leave. So I will plan to be there
+from 5 to 7 pm."
+
+Implementation:
+Event: Gathering at James's house | Start: 2025-08-28 17:00:00.00 | End: 2025-08-28 19:00:00.00
+
+Scheduled action: Gathering at James's house | Date: 2025-08-28 | Duration: 02:00:00.00
+
+Notes for above scenario:
+Even though the actual event is planned for 5 to 10, the 'event' in My
+system is only for when I am planning to be involved with the event, when I want to be there,
+and the duration on the scheduled action is also as such.
+
+Scenario:
+"I need to get from my house to the gathering at James's house on August 28th."
+
+Implementation:
+Event: Drive to James's house | Start: 2025-08-28 16:30:00.00 | End: 2025-08-28 16:50:00.00
+
+Scheduled action: Drive to James's house | Date: 2025-08-28 | Duration: 00:20:00.00
+
+Notes for above scenario:
+We want to arrive 10 minutes early to ensure we are on time. But we expect the drive to only
+be 20 minutes. Since the duration is only 20 minutes, when we start it at 4:30 when we start
+driving, there are two scenarios. First scenario is that we arrive on time within 20 minutes.
+We then open the app to stop the stopwatch, as we are done driving. But we realize,
+that we cannot stop the stopwatch. We can only switch it, as per the app philosophy. So we still
+have 10 minutes before the event, and we can look at the scheduled actions and switch to something like
+'Read sample book one' and make some progress on that. Or we can switch to 'unrecorded' which is the worst
+case scenario, we are trying to avoid unrecorded as much as possible but it is definetly permissible and
+part of the process, it allows flexibility. Or we can Create a new stopwatch that says something like
+"Check whatsapp messages" and do that until we switch to the James's gathering stopwatch. This way,
+we still record the actual thing I spent my time on during that window of time.
+
+The second possibilty is that there is traffic and it takes longer than scheduled. It took 27 minutes to arrive.
+We can then switch to another stopwatch since we are done driving. Its only three minutes until the Scheduled
+event so we might just put it to unrecorded stopwatch for the time, and then switch to the 'James's gathering'
+stopwatch in three minutes.
+

@@ -1,9 +1,12 @@
 New idea:
 
 Instead of seperate entities like events, actions, planned action,
-I will just have action.
-
+I will just have actions.
 An action will be a single entitity.
+
+If we create an action we must give it a date it is associated with.
+That is the bare minimum for the action to exist.
+
 In a scenario when it is created and recorded in the course
 of a day, it will only have the 'recorded_duration' attribute
 and of course the date. 
@@ -18,3 +21,6 @@ at a certain time in the day, it will have a date,
 'time_frame' attribute (or start/end time), and also
 a 'planned_duration' attribute. Then the 'recorded_duration'
 will be added on the day of. 
+
+Thought: Must an action always have a date? What about an action
+with no date, what would be the concept?

@@ -1,0 +1,4 @@
+SQLAlchemy==2.0.41
+psycopg==3.2.9
+mypy==1.17.1
+ruff==0.12.8

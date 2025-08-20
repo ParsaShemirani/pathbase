@@ -1,0 +1,37 @@
+From action_based, I will use that foundation for now.
+But the question is, how will we keep the data for those stopwatches
+going throught the day, switching between them, the recording logic?
+
+Before the day comes, they are still 'planned_actions'.
+After the day, they are 'recorded_actions'.
+During they day, they are 'active_actions'.
+
+Math aspects of current day duration recording:
+
+ChatGPT showed me a few math ideas, one being a log of switches
+(integrate to get durations). Second way: interval segments per stopwatch
+(open/close segments). Third method being Accumulator + open start. 
+Link to chat:
+https://chatgpt.com/share/68a5677c-f5bc-800e-82a8-8e8cc3f25249
+
+Choice:
+Method three is great because of the clear and simple math, read optimization.
+However, I think I want to avoid it because it retains no information
+on the 'within - day' aspects of the action. Did I do it in a few different
+times, did I do it all at once, etc. Maybe that is valueable to have.
+I think I want to end up going with method one because of its natural fit
+to show a review of what happened throught the day in order. 
+
+Verdict: After thinking it through, I think I will go with 
+method 2. The math to show the times on the javascript website
+is very straight forward. First, we display all of the 'actions'
+that are asociated with the current date. We then fetch the segments
+log (method 2 style) for the current day. In python, we calculate the total
+'recorded_duration' for each action at the moment. 
+For the 'active' stopwatch, it is clear which one it is, as it doesnt
+have a 'end timestamp'. For that one, we just use current time - last start time
+in addition to all its previous completed segments 
+to get the recorded_duration. We then update the website
+to display these values. We then specify which one the 'active' stopwatch
+is, and the javascript website will increment it itself until the next
+interaction is taken place and it communicates with the backend.

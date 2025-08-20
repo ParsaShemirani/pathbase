@@ -12,3 +12,26 @@ It could also help with not reconnecting the action to a higher part
 of the path like a 'why enity' or a project or a higher project.
 But I am stil not sure if it is worth it or if I should only create
 a new row for an action when it is a real planned or recorded thing.
+
+
+I believe the timeless action work best with the seperate 'action_instance' table.
+If I wanted to see how much time I spent on washing clothes this week, it would
+have to be a string matching search for the action name
+which could have been entered fiferently every time.
+actions table should be timeless, the 'profile' of the action.
+
+
+Timeless action phiosophy:
+
+Consider the action "Clean backyard"
+That can be a timeless action, which has description, connected to either a project
+or vision item. That wont change with the different instances, it is the same 
+action. And then, once we plan to actually do it tomorrow, we create an instance of it.
+That instance has a date which is tomorrow, potentially a planned duration
+and planned start/end times. 
+
+
+I am thinking that actually, instead of splitting something like sleep
+into two parts because of midnight, I make the action instance itself
+actually once peice, its just that the hours that it contributes to the
+days 24 measurement are split between the two days. 

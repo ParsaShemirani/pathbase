@@ -35,3 +35,5 @@ to get the recorded_duration. We then update the website
 to display these values. We then specify which one the 'active' stopwatch
 is, and the javascript website will increment it itself until the next
 interaction is taken place and it communicates with the backend.
+
+

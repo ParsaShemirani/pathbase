@@ -24,3 +24,7 @@ will be added on the day of.
 
 Thought: Must an action always have a date? What about an action
 with no date, what would be the concept?
+
+Time frame: represented as "planned_start_time" and "planned_end_time"
+notice time instead of start_at/end_at because they are tied to a specific
+date and will never cross dates.

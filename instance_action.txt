@@ -1,0 +1,14 @@
+Until now, I thought I would have one 'actions' table
+and then the 'action_intervals' table for the stopwatch style tracking.
+The actions table would contain all the planning and record aspects of the action.
+
+But ChatGPT lead me to an idea: what if we make the actions timeless entities,
+just a concept of an action. Not tied to any real world happening.
+Just like a contact in a contact book. Then we can have instances
+of those actions. The only benefit I see at the moment, is for example
+wanting to see the history of all the times I have done the action
+'Work at REI' and want to see how much time total, what days, etc.
+It could also help with not reconnecting the action to a higher part
+of the path like a 'why enity' or a project or a higher project.
+But I am stil not sure if it is worth it or if I should only create
+a new row for an action when it is a real planned or recorded thing.

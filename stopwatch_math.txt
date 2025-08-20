@@ -9,3 +9,17 @@ and just recording what happens. Question: should I tolerate going above
 the target time? 
 
 Approach: Start as just a recorder, then add scheudling/target logic as beneficial. But first start with just recorder logic.
+
+Recorder:
+Starts with one "unrecorded" stopwatch, we can add and delete new ones.
+From the 'planning' view, we can set the stopwatch which is set to run
+when the day starts. Defaults to unrecorded. At the end of the day,
+it saves all of the stopwatches to the database, then switches to the
+stopwatches for the new day, with the appointed one starting instantly.
+There is no 'Stop' or "Pause" button, only option to switch the one
+running stopwatch.
+
+Target times:
+Why would I even add target times? Mainly for planning, I want to see 
+how much the tasks I have already assigned will take, and how much
+unscheduled time remains.

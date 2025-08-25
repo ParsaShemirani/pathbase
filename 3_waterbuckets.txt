@@ -1,0 +1,17 @@
+Without any time management, we have one bucket called 'Unrecorded'
+and the hose of water. The hose is just pouring straight into the unrecorded bucket.
+
+I decide I want to clean my room, so I put a new bucket called 'clean room'
+in the field. Now, whenever I feel like it, I can switch the hose over to the
+clean room bucket, until it is full. At this point, both buckets are auto expanding.
+They start with zero volume, and have the potential to get infinetly big as
+water is poured into them. Once I clean my room, I put the hose back in the
+'unrecorded' bucket and throw away the clean room bucket.
+
+Through the examples, the water in the hose is like time, and it going
+into a bucket represents spending that time on the action.
+
+I think of more things I want to do such as 'Call Jake' and 
+'cook lunch' and 'wash clothes', each getting a bucket.
+These are all just things I wish to do, and i can switch to any of them
+whenever I want to.

@@ -1,0 +1,33 @@
+I thought that I would abandon this concept of a 'day'.
+Why associate an action_instance to a specific day? Sleep needs to be broken
+in two because of the midnight overlap. But the importance of it is a pacing mechanisim
+and a way to divide up the time. For exapmle, If I plan to read the whole Quran and be finished
+by September 20th, there is no mechanisim that is avoiding me from picking it up
+8 hours before midnight of september 19th and starting to read non stop.
+Having time divided in these 24 hour segments allows me to make action_instances
+that are each about 20 minutes. And while being in each 24 hour segment, I can cleary see
+how much time is already planned for, how much free time I have to do other things, etc.
+
+So maybe, action instances should be anchored to a specifc day. 
+
+I think I will also make it so every action planned or recorded is an
+action instance, not just those planned beforehand.
+An 'action instance' referes to an instance of that action
+being done in a day. That instance may be broken into many intervals,
+but it is still the same instance, meaning part of the day.
+Even though I recorded 3 intervals of me doing homework,
+one for 3 minutes, one for 30 minutes, then one for 10 minutes,
+the instance of me doing homework on that day was 43 minutes recorded.
+It always divides the day up into these action instances.
+
+
+I tried thinking of how to make a day a first class entity
+to deal with time zone changes, moving place to place around the earth,
+different calendar systems. But I couldn't get anywhere valuable
+so I will just design the sysmtem based on my local timezone for now,
+but storing all datetimes in UTC.
+
+
+The 'planned date' of an action instance really means,
+I plan to perform this action sometime within this 
+timeframe of 24 hours.

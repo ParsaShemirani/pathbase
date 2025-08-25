@@ -1,0 +1,35 @@
+I am considering seperating the logic between
+planned and recorded instances of actions.
+Both of these seperate entities will reference a 'action',
+which is a timeless entity.
+
+One can avoid planning entirely. Once the 'action' entity has been
+created, we just switch the running stopwatch to that action.
+It then uses the 'interval' style of tracking. So we are recording the reality
+in this method. And there is no grouping of these action intervals.
+They are all seperate entities. But they reference the same
+timeless action. They can go across days, they are not
+subsets of a day.
+
+One can plan and avoid recording. We can create planned instances
+of actions which again reference a timeless action entity.
+the instance can have a window of time which we are planning
+to do it within. For example, consider the timeless action
+'clean room'. We can plan to do that anywhere from
+8 am tomorrow to 10pm in three days. Because as long as it
+is done before then, we are alright to do it.
+
+Question: Why would one even bother with a start time then?
+At first look, only the end time of the window is of importance
+to plan, and the window to do it starts right now, all the time.
+
+Lets consider a scenario:
+- Room planned to be cleaned before 9 pm tomorrow.
+- Garage planned to be cleaned before 7pm in 10 days.
+- Clothes to be washed before 7pm in 10 days.
+- Contact james within 20 days from now.
+
+We can record the planned duration that each task should take.
+We wait to do garage until the last duration possibilty, but
+we havent started clothes washing which has a window that ends
+wihtin that same time. 

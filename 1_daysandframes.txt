@@ -1,0 +1,18 @@
+
+
+Pure UTC way:
+Everything UTC based. The 24 hour 'Day' period is always from
+00:00 UTC of the day to 23:59.99 UTC of the day.
+Times in the app will be displayed as the local date and timezone
+of the user, but the 'time frame' of the day will
+be from 7AM to 6:56AM. This way, if the user travels
+to another timezone, only the top layer of UTC -> Local time
+conversion happens for the timestamps. The durations,
+stopwatches, day's total remains unchanged.
+
+However, one must translate their dad saying 'Clean backyard by Sunday'
+to one of the UTC 24 hour timeframes. 
+
+Consideration: The new day (00:00 local time) anywhere in the word
+is likely to be sleeping time, whereas the new day in UTC may be in
+the middle of class or a meeting, so one must split the duration between those days.

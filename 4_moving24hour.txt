@@ -1,0 +1,10 @@
+What if instead of creating a timeframe of 24 hours,
+we instead make it like a moving frame in time.
+So we have points where we are supposed to have finished an action
+that has a duration to it. And the frame will always be the next
+24 hours, and will consider every action that needs to be done within that time.
+And that moving frame winodw can be adjusted to the next X amount of time,
+and the math will all translate. And I can schedule timeframes
+whenever I want, and that will block the available time of the rolling window.
+
+I think ill try building it and see how it rolls out for now.

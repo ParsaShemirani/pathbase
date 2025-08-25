@@ -1,9 +1,6 @@
-
-
-
 from datetime import datetime, timezone
 
-from sqlalchemy import Integer, BigInteger, String, ForeignKey, DateTime, Date
+from sqlalchemy import String, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, Mapped, mapped_column
 
 class Base(MappedAsDataclass, DeclarativeBase):
@@ -11,24 +8,31 @@ class Base(MappedAsDataclass, DeclarativeBase):
 
 class Action(Base):
     __tablename__ = "actions"
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True, init=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, init=False)
     name: Mapped[str] = mapped_column(String())
 
-
-
-class ActionInstance(Base):
-    __tablename__ = "action_instances"
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True, init=False)
+class ActionPlan(Base):
+    __tablename__ = "action_plans"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, init=False)
     action_id: Mapped[int] = mapped_column(ForeignKey("actions.id"))
 
-    planned_date: Mapped[Date] = mapped_column(Date)
-    planned_duration: Mapped[int | None] = mapped_column(Integer)
-    planned_start_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    planned_end_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    duration: Mapped[int] = mapped_column(Integer)
+    deadline: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
-    recorded_duration: Mapped[int | None] = mapped_column(Integer)
+class ActionSegment(Base):
+    __tablename__ = "action_segments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, init=False)
+    action_id: Mapped[int] = mapped_column(ForeignKey("actions.id"))
 
-class ActionInterval(Base):
-    __tablename__ = "action_intervals"
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True, init=False)
-    action_instance_id: Mapped[int] = mapped_column(ForeignKey("action_instances.id"))
+    start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    end_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+
+
+
+
+"""
+I will tie segments and plans to the same action.
+Since plans are made with intention of being done within the 24
+hour segment before them, it will add all segments in that timeframe
+to calculate completed time.
+"""

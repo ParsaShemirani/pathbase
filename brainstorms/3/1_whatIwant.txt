@@ -1,0 +1,12 @@
+Now that I have the stopwatches.py first functions,
+I want to see the 'moving 24 hour frame' in action
+to see if it is the best way forward.
+
+Decisions:
+Are action segments just tied to actions or
+action plans?
+ 
+Will I have multiple 'end time' points in time,
+each of which can be selected and viewed, or will it always
+just roll as now -> 24 hours from now?
+

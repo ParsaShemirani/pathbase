@@ -10,3 +10,13 @@ Will I have multiple 'end time' points in time,
 each of which can be selected and viewed, or will it always
 just roll as now -> 24 hours from now?
 
+
+The main idea: thinking somewhere between
+a to do list on paper, vs time blocking on the calendar.
+Can we add end dates and durations to those to do items
+and get valuable guidance without setting them
+to a time block, or not even a day? What if with just those two
+pieces of information, one can see how much unscheduled time they have,
+judge wether or not they can add / extend / not do something.
+Ensure that the target amount of time is spent, even though
+it was not all in one session.

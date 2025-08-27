@@ -1,0 +1,8 @@
+I will start the frames in the following matter:
+
+Define a 'time_frame' class, they cannot overlap, but a time frame can be a child
+of another time frame.
+
+Plans are tied to time frames, action segments are tied to actions.
+So an action segment can be recorded without a time frame or ActionPlan
+that accompanies it.

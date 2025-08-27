@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Action Tracker</title>
+</head>
+<body>
+    <div id="current">
+        <strong>Current Action:</strong> <span id="current-name">None</span><br>
+        <strong>Elapsed:</strong> <span id="elapsed">00:00:00</span>
+    </div>
+
+    <h2>Add Action</h2>
+    <form action="/add_action" method="post">
+        <input name="name" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <h2>Search Actions</h2>
+    <form action="/search" method="get">
+        <input name="q">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Switch Action</h2>
+    <form action="/switch" method="post">
+        <input name="action_id" required>
+        <button type="submit">Switch</button>
+    </form>
+
+    <script>
+        function pad(n) { return n.toString().padStart(2, '0'); }
+        let startAt = null;
+        let nameSpan = document.getElementById('current-name');
+        let elapsedSpan = document.getElementById('elapsed');
+
+        async function fetchCurrent() {
+            const res = await fetch('/current_segment');
+            const data = await res.json();
+            if (data && data.start_at) {
+                startAt = new Date(data.start_at);
+                nameSpan.textContent = data.action_name;
+            } else {
+                startAt = null;
+                nameSpan.textContent = 'None';
+                elapsedSpan.textContent = '00:00:00';
+            }
+        }
+
+        function updateElapsed() {
+            if (!startAt) return;
+            const now = new Date();
+            let diff = Math.floor((now - startAt) / 1000);
+            const hrs = Math.floor(diff / 3600);
+            diff %= 3600;
+            const mins = Math.floor(diff / 60);
+            const secs = diff % 60;
+            elapsedSpan.textContent = pad(hrs)+':'+pad(mins)+':'+pad(secs);
+        }
+
+        fetchCurrent();
+        setInterval(updateElapsed, 1000);
+    </script>
+</body>
+</html>

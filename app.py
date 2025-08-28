@@ -2,8 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from sqlalchemy import select
+
 from connection import Session
-from api_functions import get_all_actions, add_new_action, end_running_segment
+from models import Action, ActionSegment
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -15,23 +17,36 @@ templates = Jinja2Templates(directory="templates")
 async def home(request: Request):
     return templates.TemplateResponse(request=request, name="index.html")
 
+
 @app.get("/action_manager")
 async def action_manager(request: Request):
     return templates.TemplateResponse(request=request, name="action_manager.html")
+
 
 @app.get("/add_action")
 async def add_action(request: Request, name: str):
     with Session() as session:
         with session.begin():
-            new_action = add_new_action(session=session, name=name)
-        session.refresh(new_action)
-    return templates.TemplateResponse(request=request, name="display_new_action.html", context={"new_action": new_action})
+            new_action = Action(name=name)
+            session.add(new_action)
+        new_action_id = new_action.id
+        new_action_name = new_action.name
+
+    return templates.TemplateResponse(
+        request=request,
+        name="display_new_action.html",
+        context={"new_action_id": new_action_id, "new_action_name": new_action_name},
+    )
+
 
 @app.get("/actions/all")
 async def all_actions(request: Request):
     with Session() as session:
-        actions = get_all_actions(session=session)
-    return templates.TemplateResponse(request=request, name="actions_list.html", context={"actions": actions})
+        actions = session.scalars(select(Action)).all()
+    return templates.TemplateResponse(
+        request=request, name="actions_list.html", context={"actions": actions}
+    )
+
 
 """
 @app.get("/end_segment")

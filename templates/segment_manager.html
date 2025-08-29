@@ -6,6 +6,16 @@
     <title>Document</title>
 </head>
 <body>
+    <a href="{{ url_for('running_segment_info') }}"><button>Running segment info</button></a>
+
+
+    <form action="{{ url_for('start_segment') }}" method="get">
+        <label for="actionIdInput">Enter Action ID:</label>
+        <input id="actionIdInput" name="action_id">
+        <button type="submit">Enter</button>
+    </form>
+
+
     <a href="{{ url_for('end_segment') }}"><button>End running segment</button></a>
 </body>
 </html>

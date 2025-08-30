@@ -10,7 +10,6 @@ from connection import Session
 from models import Action, ActionSegment
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 

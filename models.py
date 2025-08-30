@@ -35,7 +35,7 @@ class ActionSegment(Base):
         DateTime(timezone=True), default=None
     )
 
-
+"""
 class TimeFrame(Base):
     __tablename__ = "time_frames"
     id: Mapped[int] = mapped_column(
@@ -56,3 +56,4 @@ class ActionPlan(Base):
 
     duration: Mapped[int] = mapped_column(Integer)
 
+"""

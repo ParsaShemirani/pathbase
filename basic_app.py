@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -54,10 +54,7 @@ async def start_segment(request: Request, action_name: str):
                 select(ActionSegment).where(ActionSegment.end_at == None)
             )
             if running_segment:
-                return templates.TemplateResponse(
-                    request=request,
-                    name="already_active.html"
-                )
+                return HTTPException(status_code=400, detail="There is already a running segment.")
 
             # Since no active session, lets make the new one
             current_time = datetime.now(tz=timezone.utc)
@@ -77,6 +74,9 @@ async def end_segment():
             running_segment = session.scalar(
                 select(ActionSegment).where(ActionSegment.end_at == None)
             )
+            if not running_segment:
+                raise HTTPException(status_code=400, detail="There is no running segment")
             running_segment.end_at = datetime.now(tz=timezone.utc)
+
     
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)

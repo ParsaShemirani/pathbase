@@ -5,7 +5,7 @@ session = Session()
 session.begin()
 
 jamie = Action(
-    name="Eat_tomatoes"
+    name="FastTianglo"
 )
 
 session.add(jamie)

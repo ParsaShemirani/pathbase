@@ -1,7 +1,9 @@
-from datetime import datetime, timezone
+from __future__ import annotations
+
+from datetime import datetime
 
 from sqlalchemy import String, ForeignKey, Integer, DateTime
-from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, Mapped, mapped_column, relationship
 
 
 class Base(MappedAsDataclass, DeclarativeBase):
@@ -16,6 +18,8 @@ class Action(Base):
 
     name: Mapped[str] = mapped_column(String())
 
+    action_segments: Mapped[list[ActionSegment]] = relationship(back_populates="action", init=False)
+
 
 class ActionSegment(Base):
     __tablename__ = "action_segments"
@@ -25,11 +29,13 @@ class ActionSegment(Base):
     action_id: Mapped[int] = mapped_column(ForeignKey("actions.id"))
 
     start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    action: Mapped[Action] = relationship(back_populates="action_segments", init=False)
+
     end_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), default=None
     )
 
-
+"""
 class TimeFrame(Base):
     __tablename__ = "time_frames"
     id: Mapped[int] = mapped_column(
@@ -50,10 +56,4 @@ class ActionPlan(Base):
 
     duration: Mapped[int] = mapped_column(Integer)
 
-
-"""
-I will tie segments and plans to the same action.
-Since plans are made with intention of being done within the 24
-hour segment before them, it will add all segments in that timeframe
-to calculate completed time.
 """

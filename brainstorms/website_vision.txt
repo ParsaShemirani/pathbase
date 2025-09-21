@@ -1,0 +1,34 @@
+I want to start with a website that allows for the recording
+features. Since every segment is tied to an action, we need
+to be able to create actions, aswell as view the ones that
+already exist. On the main page, it will display
+the current running segment with its elapsed time, action id,
+segment id, and action name. There will be links
+at the bottom of the page which open up pages
+for the 10 most recent segments, as well as a page which loads
+the entire history of all the segments. There will be a page
+that is an action manager. It allows me to view and add them.
+There are two fields at the top, one to search for an action,
+and one to add a new action. Below those two fields, there is
+also a button for 'all actions'. If a search is made for an action,
+it opens a new page which is just a list of the relevant actions
+and their ids. If an action is added, it opens a new page that says
+action added and shows the new action with its id. 
+
+
+Main page:
+- Segment manager
+- Action manager
+
+Segment manager:
+- Shows running segment + info
+- Button to stop current action if running
+- If no running action, field to start new segment
+- Two buttons, one showing last 10 segments,
+one showing segment sums for the display
+
+Action manager:
+- Shows running action + info
+- Field to create a new action with name (Opens new page shows id and name)
+- Field to search for an action (opens new results page)
+- Button to show all actions ordered by id

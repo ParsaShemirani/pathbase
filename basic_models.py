@@ -16,7 +16,7 @@ class ActionSegment(Base):
         Integer, primary_key=True, autoincrement=True, init=False
     )
 
-    action_name: Mapped[str] = mapped_column(String())
+    action_name: Mapped[str]
     start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     end_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), default=None

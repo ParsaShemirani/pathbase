@@ -1,12 +1,13 @@
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from sqlalchemy import select
 
 from connection import Session
-from models import Action, ActionSegment
+from models import ActionSegment
 
 app = FastAPI()
 
@@ -15,110 +16,80 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 async def home(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html")
-
-
-# Action Manager
-@app.get("/action_manager")
-async def action_manager(request: Request):
-    return templates.TemplateResponse(request=request, name="action_manager.html")
-
-
-@app.get("/add_action")
-async def add_action(request: Request, name: str):
+    # Get active segment info
     with Session() as session:
-        with session.begin():
-            new_action = Action(name=name)
-            session.add(new_action)
-        new_action_id = new_action.id
+        active_segment = session.scalar(
+            select(ActionSegment).where(ActionSegment.end_at == None)
+        )
+
+        if active_segment:
+            delta_duration = datetime.now(
+                tz=timezone.utc
+            ) - active_segment.start_at.replace(tzinfo=timezone.utc)
+            total_seconds = int(delta_duration.total_seconds())
+            hours, remainder = divmod(total_seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            duration_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+            active_segment_dict = {
+                "action_name": active_segment.action_name,
+                "segment_duration": duration_str,
+                "segment_start": active_segment.start_at,
+            }
+        else:
+            active_segment_dict = {"no_active_segment": True}
 
     return templates.TemplateResponse(
         request=request,
-        name="display_new_action.html",
-        context={"new_action_id": new_action_id, "new_action_name": name},
+        name="index.html",
+        context={"active_segment_dict": active_segment_dict},
     )
-
-
-@app.get("/actions/all")
-async def all_actions(request: Request):
-    with Session() as session:
-        actions = session.scalars(select(Action)).all()
-    return templates.TemplateResponse(
-        request=request, name="actions_list.html", context={"actions": actions}
-    )
-
-
-# Segment Manager
-@app.get("/segment_manager")
-async def segment_manager(request: Request):
-    return templates.TemplateResponse(request=request, name="segment_manager.html")
-
-
 
 
 @app.get("/start_segment")
-async def start_segment(request: Request, action_id: int):
+async def start_segment(request: Request, action_name: str):
     with Session() as session:
         with session.begin():
-            segment_start = datetime.now(tz=timezone.utc)
+            # Make sure no session is active
+            active_segment = session.scalar(
+                select(ActionSegment).where(ActionSegment.end_at == None)
+            )
+            if active_segment:
+                return HTTPException(
+                    status_code=400, detail="There is already a active segment."
+                )
+
+            # Since no active session, lets make the new one
+            current_time = datetime.now(tz=timezone.utc)
             new_segment = ActionSegment(
-                action_id=action_id,
-                start_at=segment_start,
+                action_name=action_name,
+                start_at=current_time,
             )
             session.add(new_segment)
-        segment_action_name = new_segment.action.name
-        segment_id = new_segment.id
-    return templates.TemplateResponse(
-        request=request,
-        name="display_started_segment.html",
-        context={
-            "segment_action_name": segment_action_name,
-            "segment_start": segment_start,
-            "segment_id": segment_id,
-        },
-    )
 
-@app.get("/running_segment_info")
-async def running_segment_info(request: Request):
-    with Session() as session:
-        running_segment = session.scalar(
-            select(ActionSegment).where(ActionSegment.end_at == None)
-        )
-        current_time = datetime.now(tz=timezone.utc)
-        segment_start = running_segment.start_at
-        segment_action_name = running_segment.action.name
-        segment_duration = current_time - segment_start.replace(tzinfo=timezone.utc)
-    return templates.TemplateResponse(
-        request=request,
-        name="running_segment_info.html",
-        context={
-            "segment_action_name": segment_action_name,
-            "segment_duration": segment_duration,
-            "segment_start": segment_start,
-            "current_time": current_time,
-        }
-    )
+    return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
 
 @app.get("/end_segment")
-async def end_segment(request: Request):
+async def end_segment():
     with Session() as session:
         with session.begin():
-            running_segment = session.scalar(
+            active_segment = session.scalar(
                 select(ActionSegment).where(ActionSegment.end_at == None)
             )
-            current_time = datetime.now(tz=timezone.utc)
-            segment_start = running_segment.start_at
-            segment_action_name = running_segment.action.name
-            running_segment.end_at = current_time
-            segment_duration = current_time - segment_start.replace(tzinfo=timezone.utc)
-    return templates.TemplateResponse(
-        request=request,
-        name="display_ended_segment.html",
-        context={
-            "segment_start": segment_start,
-            "segment_end": current_time,
-            "segment_action_name": segment_action_name,
-            "segment_duration": segment_duration,
-        },
-    )
+            if not active_segment:
+                raise HTTPException(status_code=400, detail="There is no active segment")
+            active_segment.end_at = datetime.now(tz=timezone.utc)
+    return RedirectResponse(url=app.url_path_for("home"), status_code=303)
+
+
+@app.get("/delete_active_segment")
+async def delete_active_segment():
+    with Session() as session:
+        with session.begin():
+            active_segment = session.scalar(
+                select(ActionSegment).where(ActionSegment.end_at == None)
+            )
+            if not active_segment:
+                raise HTTPException(status_code=400, detail="There is no active segment")
+            session.delete(active_segment)
+    return RedirectResponse(url=app.url_path_for("home"), status_code=303)

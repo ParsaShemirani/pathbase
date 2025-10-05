@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("sqlite:////users/parsashemirani/main/pathbase.db", echo=True)
+from settings import database_path
+
+engine = create_engine("sqlite:///" + database_path, echo=True)
 
 Session = sessionmaker(bind=engine)

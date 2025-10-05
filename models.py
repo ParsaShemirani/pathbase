@@ -2,6 +2,37 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from sqlalchemy import Integer, DateTime
+from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, Mapped, mapped_column
+
+
+class Base(MappedAsDataclass, DeclarativeBase):
+    pass
+
+
+class ActionSegment(Base):
+    __tablename__ = "action_segments"
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True, init=False
+    )
+
+    action_name: Mapped[str]
+    start_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    end_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), default=None
+    )
+
+
+
+
+
+"""
+Old brainstorm of models;
+
+from __future__ import annotations
+
+from datetime import datetime
+
 from sqlalchemy import String, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass, Mapped, mapped_column, relationship
 
@@ -35,7 +66,7 @@ class ActionSegment(Base):
         DateTime(timezone=True), default=None
     )
 
-"""
+
 class TimeFrame(Base):
     __tablename__ = "time_frames"
     id: Mapped[int] = mapped_column(
@@ -55,5 +86,7 @@ class ActionPlan(Base):
     action_id: Mapped[int] = mapped_column(ForeignKey("actions.id"))
 
     duration: Mapped[int] = mapped_column(Integer)
+
+
 
 """

@@ -6,6 +6,7 @@
 - Activate the venv via "source .venv/bin/activate"
 - Download package dependencies via "pip install -r requirements.txt"
 - Create a file ".env" where the variable "DATABASE_PATH" is set.
+- Create the database via "python create_db.py"
 - Run with fastapi dev app.py --host 0.0.0.0
 
 ### Sample .env file:

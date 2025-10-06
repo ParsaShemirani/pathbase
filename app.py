@@ -54,7 +54,7 @@ async def start_segment(request: Request, action_name: str):
                 select(ActionSegment).where(ActionSegment.end_at == None)
             )
             if active_segment:
-                return HTTPException(
+                raise HTTPException(
                     status_code=400, detail="There is already a active segment."
                 )
 

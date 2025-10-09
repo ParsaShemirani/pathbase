@@ -11,3 +11,7 @@
 
 ### Sample .env file:
 DATABASE_PATH=/Users/jameswebb/pathbase.db
+
+## Analysis scripts
+To get the output from the analysis scripts,
+define 'ANALYSIS_OUTPUT_DIRECTORY' in the .env file.

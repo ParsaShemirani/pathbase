@@ -16,8 +16,8 @@ from models import ActionSegment
 ### Modify these variables:
 local_zoneinfo = ZoneInfo("America/Los_Angeles")
 
-local_timeframe_start = datetime(year=2025, month=10, day=8, hour=0, tzinfo=local_zoneinfo)
-local_timeframe_end = datetime(year=2025, month=10, day=9, hour=0, tzinfo=local_zoneinfo)
+local_timeframe_start = datetime(year=2025, month=10, day=9, hour=0, tzinfo=local_zoneinfo)
+local_timeframe_end = datetime(year=2025, month=10, day=10, hour=0, tzinfo=local_zoneinfo)
 
 ###
 
@@ -35,14 +35,18 @@ class Display_Row:
     end_at: str
     duration: str
 
-display_rows: list[Display_Row] = []
-timeframe_recorded_duration = timedelta()
+
 
 def format_hms(td: timedelta) -> str:
     total = int(td.total_seconds())
     h, r = divmod(total, 3600)
     m, s = divmod(r, 60)
     return f"{h:02}:{m:02}:{s:02}"
+
+display_rows: list[Display_Row] = []
+start_times: list[datetime] = []
+end_times: list[datetime] = []
+timeframe_recorded_duration = timedelta()
 
 with Session() as session:
     rows = session.scalars(
@@ -52,8 +56,8 @@ with Session() as session:
     if rows[-1].end_at is None:
         del rows[-1]
 
-    timeframe_start_at = rows[0].start_at
-    timeframe_end_at = rows[-1].end_at
+    #timeframe_start_at = rows[0].start_at
+    #timeframe_end_at = rows[-1].end_at
 
     for row in rows:
         naive_utc_start_at = row.start_at
@@ -69,6 +73,9 @@ with Session() as session:
             continue
         if local_end_at > local_timeframe_end and local_start_at > local_timeframe_end:
             continue
+        
+        start_times.append(local_start_at)
+        end_times.append(local_end_at)
 
         start_at_str = local_start_at.strftime("%Y-%m-%dT%H:%M:%S")
         end_at_str = local_end_at.strftime("%Y-%m-%dT%H:%M:%S")
@@ -107,7 +114,7 @@ with open(output_file_path, 'w', newline='') as csvfile:
     for dr in display_rows:
         writer.writerow(rowdict=asdict(dr))
 
-timeframe_total_duration = timeframe_end_at - timeframe_start_at
+timeframe_total_duration = max(end_times) - min(start_times)
 timeframe_unrecorded_duration = timeframe_total_duration - timeframe_recorded_duration
 timeframe_percentage_recorded = 100 * (timeframe_recorded_duration.total_seconds() / timeframe_total_duration.total_seconds())
 timeframe_percentage_unrecorded = 100 * (timeframe_unrecorded_duration.total_seconds() / timeframe_total_duration.total_seconds())

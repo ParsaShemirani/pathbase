@@ -37,7 +37,7 @@ async def home(request: Request):
 
 
 @app.get("/start_segment")
-async def start_segment(request: Request, action_name: str):
+async def start_segment(action_name: str):
     with Session() as session:
         with session.begin():
             active_segment = session.scalar(

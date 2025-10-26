@@ -13,28 +13,18 @@ app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
-def string_to_datetime()
 
 @app.get("/")
 async def home(request: Request):
-    # Get active segment info
     with Session() as session:
         active_segment = session.scalar(
-            select(ActionSegment).where(ActionSegment.end_at == None)
+            select(ActionSegment).where(ActionSegment.str_end_at == None)
         )
-
         if active_segment:
-            delta_duration = datetime.now(
-                tz=timezone.utc
-            ) - active_segment.start_at.replace(tzinfo=timezone.utc)
-            total_seconds = int(delta_duration.total_seconds())
-            hours, remainder = divmod(total_seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            duration_str = f"{hours:02}:{minutes:02}:{seconds:02}"
             active_segment_dict = {
                 "action_name": active_segment.action_name,
-                "segment_duration": duration_str,
-                "segment_start": active_segment.start_at,
+                "segment_duration": active_segment.str_duration,
+                "segment_start": active_segment.str_start_at,
             }
         else:
             active_segment_dict = {"no_active_segment": True}
@@ -50,23 +40,16 @@ async def home(request: Request):
 async def start_segment(request: Request, action_name: str):
     with Session() as session:
         with session.begin():
-            # Make sure no session is active
             active_segment = session.scalar(
-                select(ActionSegment).where(ActionSegment.end_at == None)
+                select(ActionSegment).where(ActionSegment.str_end_at == None)
             )
             if active_segment:
                 raise HTTPException(
-                    status_code=400, detail="There is already a active segment."
+                    status_code=400, detail="There is already an active segment."
                 )
-
-            # Since no active session, lets make the new one
-            current_time = datetime.now(tz=timezone.utc)
-            new_segment = ActionSegment(
-                action_name=action_name,
-                start_at=current_time,
-            )
+            new_segment = ActionSegment(action_name=action_name)
+            new_segment.dt_start_at = datetime.now(tz=timezone.utc)
             session.add(new_segment)
-
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
 
@@ -75,11 +58,13 @@ async def end_segment():
     with Session() as session:
         with session.begin():
             active_segment = session.scalar(
-                select(ActionSegment).where(ActionSegment.end_at == None)
+                select(ActionSegment).where(ActionSegment.str_end_at == None)
             )
             if not active_segment:
-                raise HTTPException(status_code=400, detail="There is no active segment")
-            active_segment.end_at = datetime.now(tz=timezone.utc)
+                raise HTTPException(
+                    status_code=400, detail="There is no active segment."
+                )
+            active_segment.dt_end_at = datetime.now(tz=timezone.utc)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
 
@@ -88,9 +73,11 @@ async def delete_active_segment():
     with Session() as session:
         with session.begin():
             active_segment = session.scalar(
-                select(ActionSegment).where(ActionSegment.end_at == None)
+                select(ActionSegment).where(ActionSegment.str_end_at == None)
             )
             if not active_segment:
-                raise HTTPException(status_code=400, detail="There is no active segment")
+                raise HTTPException(
+                    status_code=400, detail="There is no active segment."
+                )
             session.delete(active_segment)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)

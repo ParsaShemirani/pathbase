@@ -1,10 +1,11 @@
+import io
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi.responses import Response, RedirectResponse
 from fastapi.templating import Jinja2Templates
-
 from sqlalchemy import select
+import pandas as pd
 
 from server.connection import Session
 from server.models import ActionSegment
@@ -81,3 +82,20 @@ async def delete_active_segment():
                 )
             session.delete(active_segment)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
+
+@app.get("/download_csv")
+async def download_csv():
+    with Session() as session:
+        conn = session.connection()
+        df = pd.read_sql_table(table_name="action_segments", con=conn)
+        str_iso_now = datetime.now(tz=timezone.utc).strftime(format="%Y-%m-%d")
+        with io.StringIO() as sio:
+            df.to_csv(sio, index=False)
+            return Response(
+                content=sio.getvalue(),
+                media_type="text/csv",
+                headers={"Content-Disposition": f"attachment; filename={str_iso_now}.csv"}
+            )
+    
+
+

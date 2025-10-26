@@ -16,8 +16,8 @@ from models import ActionSegment
 ### Modify these variables:
 local_zoneinfo = ZoneInfo("America/Los_Angeles")
 
-local_timeframe_start = datetime(year=2025, month=10, day=9, hour=0, tzinfo=local_zoneinfo)
-local_timeframe_end = datetime(year=2025, month=10, day=10, hour=0, tzinfo=local_zoneinfo)
+local_timeframe_start = datetime(year=2025, month=10, day=22, hour=0, tzinfo=local_zoneinfo)
+local_timeframe_end = datetime(year=2025, month=10, day=22, hour=23, tzinfo=local_zoneinfo)
 
 ###
 

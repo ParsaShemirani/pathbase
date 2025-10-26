@@ -6,13 +6,14 @@ from fastapi.templating import Jinja2Templates
 
 from sqlalchemy import select
 
-from connection import Session
-from models import ActionSegment
+from server.connection import Session
+from server.models import ActionSegment
 
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
+def string_to_datetime()
 
 @app.get("/")
 async def home(request: Request):

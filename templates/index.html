@@ -22,5 +22,13 @@
         <input id="actionNameInput" name="action_name">
         <button type="submit">Enter</button>
     </form>
+
+    <hr>
+
+    <form action="{{ url_for('add_note') }}", method="get">
+        <label for="noteTextInput">Enter Note Text:</label>
+        <input id="noteTextInput" name="note_text">
+        <button type="submit">Enter</button>
+    </form>
 </body>
 </html>

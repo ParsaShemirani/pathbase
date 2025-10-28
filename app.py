@@ -8,7 +8,7 @@ from sqlalchemy import select
 import pandas as pd
 
 from connection import Session
-from models import ActionSegment
+from models import ActionSegment, Note
 
 app = FastAPI()
 
@@ -83,6 +83,17 @@ async def delete_active_segment():
             session.delete(active_segment)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
+
+@app.get("/add_note")
+async def add_note(note_text: str):
+    with Session() as session:
+        with session.begin():
+            new_note = Note(text=note_text)
+            new_note.dt_created_ts = datetime.now(tz=timezone.utc)
+            session.add(new_note)
+    return RedirectResponse(url=app.url_path_for("home"), status_code=303)
+
+
 @app.get("/download_csv")
 async def download_csv():
     with Session() as session:
@@ -94,8 +105,7 @@ async def download_csv():
             return Response(
                 content=sio.getvalue(),
                 media_type="text/csv",
-                headers={"Content-Disposition": f"attachment; filename={str_iso_now}.csv"}
+                headers={
+                    "Content-Disposition": f"attachment; filename={str_iso_now}.csv"
+                },
             )
-    
-
-

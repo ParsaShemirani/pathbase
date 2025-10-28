@@ -7,8 +7,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 import pandas as pd
 
-from server.connection import Session
-from server.models import ActionSegment
+from connection import Session
+from models import ActionSegment
 
 app = FastAPI()
 

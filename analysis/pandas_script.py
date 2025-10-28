@@ -1,6 +1,6 @@
 import pandas as pd
 
-from server.env_vars import DATABASE_PATH, ANALYSIS_OUTPUT_DIR
+from env_vars import DATABASE_PATH, ANALYSIS_OUTPUT_DIR
 
 df = pd.read_csv(DATABASE_PATH)
 

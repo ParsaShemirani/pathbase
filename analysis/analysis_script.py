@@ -10,8 +10,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import load_only
 from dotenv import load_dotenv
 
-from connection import Session
-from models import ActionSegment
+from server.connection import Session
+from server.models import ActionSegment
 
 ### Modify these variables:
 local_zoneinfo = ZoneInfo("America/Los_Angeles")

@@ -34,12 +34,16 @@ class ActionSegment(Base):
     def dt_end_at(self) -> datetime | None:
         if self.str_end_at is not None:
             return datetime.strptime(self.str_end_at, ISO_FMT_Z)
+        else:
+            return None
 
     @dt_end_at.setter
-    def dt_end_at(self, dt: datetime):
+    def dt_end_at(self, dt: datetime | None):
+        if dt is None:
+            self.str_end_at = None
         if dt.tzinfo is None:
             raise ValueError("datetime fields must be timezone aware")
-        self.str_end_at = dt.strftime(ISO_FMT_Z) if dt else None
+        self.str_end_at = dt.strftime(ISO_FMT_Z)
 
     @property
     def duration(self) -> timedelta:

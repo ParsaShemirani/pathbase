@@ -25,7 +25,7 @@ df['display_duration'] = df['duration'].apply(lambda x: (str(x)[7:])[:8])
 df = df[df['local_dt_end_at'] >= TIME_FRAME_START]
 df = df[df['local_dt_start_at'] <= TIME_FRAME_END]
 
-display_df = df[["action_name", "display_local_start_at", "display_duration"]]
+display_df = df[["name", "display_local_start_at", "display_duration"]]
 print("JAMIE")
 print(display_df.head())
 display_df.to_html(ANALYSIS_OUTPUT_DIR / "jamietest.html")

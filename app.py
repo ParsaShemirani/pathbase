@@ -23,7 +23,7 @@ async def home(request: Request):
         )
         if active_segment:
             active_segment_dict = {
-                "action_name": active_segment.action_name,
+                "action": active_segment.name,
                 "segment_duration": active_segment.str_duration,
                 "segment_start": active_segment.str_start_at,
             }
@@ -38,7 +38,7 @@ async def home(request: Request):
 
 
 @app.get("/start_segment")
-async def start_segment(action_name: str):
+async def start_segment(name: str):
     with Session() as session:
         with session.begin():
             active_segment = session.scalar(
@@ -48,7 +48,7 @@ async def start_segment(action_name: str):
                 raise HTTPException(
                     status_code=400, detail="There is already an active segment."
                 )
-            new_segment = ActionSegment(action_name=action_name)
+            new_segment = ActionSegment(name=name)
             new_segment.dt_start_at = datetime.now(tz=timezone.utc)
             session.add(new_segment)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)

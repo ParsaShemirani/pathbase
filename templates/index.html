@@ -30,5 +30,11 @@
         <input id="noteTextInput" name="note_text">
         <button type="submit">Enter</button>
     </form>
+
+    <ul>
+        {% for n in segment_notes %}
+            <li>{{ n.text }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

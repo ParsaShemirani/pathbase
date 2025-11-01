@@ -27,13 +27,17 @@ async def home(request: Request):
                 "segment_duration": active_segment.str_duration,
                 "segment_start": active_segment.str_start_at,
             }
+            segment_notes = session.scalars(
+                select(Note).where(Note.str_created_ts > active_segment.str_start_at)
+            ).all()
         else:
-            active_segment_dict = {"no_active_segment": True}
+            active_segment_dict = {"no_active_segment": "True"}
+            segment_notes = []
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"active_segment_dict": active_segment_dict},
+        context={"active_segment_dict": active_segment_dict, "segment_notes": segment_notes},
     )
 
 
@@ -94,8 +98,8 @@ async def add_note(note_text: str):
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
 
-@app.get("/download_csv")
-async def download_csv():
+@app.get("/download_segments_csv")
+async def download_segments_csv():
     with Session() as session:
         conn = session.connection()
         df = pd.read_sql_table(table_name="action_segments", con=conn)
@@ -106,6 +110,22 @@ async def download_csv():
                 content=sio.getvalue(),
                 media_type="text/csv",
                 headers={
-                    "Content-Disposition": f"attachment; filename={str_iso_now}.csv"
+                    "Content-Disposition": f"attachment; filename=segments_{str_iso_now}.csv"
+                },
+            )
+
+@app.get("/download_notes_csv")
+async def download_notes_csv():
+    with Session() as session:
+        conn = session.connection()
+        df = pd.read_sql_table(table_name="notes", con=conn)
+        str_iso_now = datetime.now(tz=timezone.utc).strftime(format="%Y-%m-%d")
+        with io.StringIO() as sio:
+            df.to_csv(sio, index=False)
+            return Response(
+                content=sio.getvalue(),
+                media_type="text/csv",
+                headers={
+                    "Content-Disposition": f"attachment; filename=notes_{str_iso_now}.csv"
                 },
             )

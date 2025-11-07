@@ -6,35 +6,38 @@
     <title>Stopwatch homepage</title>
 </head>
 <body>
-    <h2>Active Segment</h2>
-    <ul>
-        {% for key, value in active_segment_dict.items() %}
-            <li>{{ key }}: {{value}}</li>
-        {% endfor %}
-    </ul>
-    <hr>
-    
-    <a href="{{ url_for('end_segment') }}"><button>End active segment</button></a>
-    <a href="{{ url_for('delete_active_segment') }}"><button>Delete active segment</button></a>
 
-    <form action="{{ url_for('start_segment') }}" method="get">
-        <label for="actionNameInput">Enter Name:</label>
-        <input id="actionNameInput" name="name">
-        <button type="submit">Enter</button>
-    </form>
+    {% if active_segment %}
+        <h2>Active Segment</h2>
+        <p>Duration: {{ active_segment.str_duration }}</p>
 
-    <hr>
+        <a href="{{ url_for('start_segment') }}"><button>Start new segment</button></a>
+        <a href="{{ url_for('end_segment') }}"><button>End active segment</button></a>
+        <a href="{{ url_for('delete_active_segment') }}"><button>Delete active segment</button></a>
 
-    <form action="{{ url_for('add_note') }}", method="get">
+        <hr>
+
+        <form action="{{ url_for('add_note') }}" method="get">
         <label for="noteTextInput">Enter Note Text:</label>
         <input id="noteTextInput" name="note_text">
         <button type="submit">Enter</button>
-    </form>
+        </form>
 
-    <ul>
-        {% for n in segment_notes %}
-            <li>{{ n.text }}</li>
-        {% endfor %}
-    </ul>
+        <h2>Notes</h2>
+        {% if segment_notes%}
+            <ul>
+            {%for note in segment_notes %}
+                <li>{{ note.text }}</li>
+                <li>{{ note.str_elapsed }}</li>
+            {%endfor%}
+            </ul>
+        {% endif %}
+
+    {% else %}
+        <h2>No active segment</h2>
+        <a href="{{ url_for('start_segment') }}"><button>Start new segment</button></a>
+        <a href="{{ url_for('end_segment') }}"><button>End active segment</button></a>
+        <a href="{{ url_for('delete_active_segment') }}"><button>Delete active segment</button></a>
+    {% endif %}
 </body>
 </html>

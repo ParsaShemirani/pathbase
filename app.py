@@ -22,27 +22,21 @@ async def home(request: Request):
             select(ActionSegment).where(ActionSegment.str_end_at == None)
         )
         if active_segment:
-            active_segment_dict = {
-                "action": active_segment.name,
-                "segment_duration": active_segment.str_duration,
-                "segment_start": active_segment.str_start_at,
-            }
             segment_notes = session.scalars(
-                select(Note).where(Note.str_created_ts > active_segment.str_start_at)
+                select(Note).where(Note.action_segment_id == active_segment.id).order_by(Note.id.desc())
             ).all()
         else:
-            active_segment_dict = {"no_active_segment": "True"}
             segment_notes = []
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"active_segment_dict": active_segment_dict, "segment_notes": segment_notes},
+        context={"active_segment": active_segment, "segment_notes": segment_notes},
     )
 
 
 @app.get("/start_segment")
-async def start_segment(name: str):
+async def start_segment():
     with Session() as session:
         with session.begin():
             active_segment = session.scalar(
@@ -52,7 +46,7 @@ async def start_segment(name: str):
                 raise HTTPException(
                     status_code=400, detail="There is already an active segment."
                 )
-            new_segment = ActionSegment(name=name)
+            new_segment = ActionSegment()
             new_segment.dt_start_at = datetime.now(tz=timezone.utc)
             session.add(new_segment)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
@@ -92,7 +86,14 @@ async def delete_active_segment():
 async def add_note(note_text: str):
     with Session() as session:
         with session.begin():
-            new_note = Note(text=note_text)
+            active_segment = session.scalar(
+                select(ActionSegment).where(ActionSegment.str_end_at == None)
+            )
+            if not active_segment:
+                raise HTTPException(
+                    status_code=400, detail="There is no active segment."
+                )
+            new_note = Note(action_segment_id=active_segment.id, text=note_text)
             new_note.dt_created_ts = datetime.now(tz=timezone.utc)
             session.add(new_note)
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)

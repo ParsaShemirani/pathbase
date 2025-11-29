@@ -8,7 +8,7 @@ from sqlalchemy import select
 import pandas as pd
 
 from connection import Session
-from models import ActionSegment, Note
+from models import ActionSegment
 
 app = FastAPI()
 
@@ -27,17 +27,13 @@ async def home(request: Request):
                 "segment_duration": active_segment.str_duration,
                 "segment_start": active_segment.str_start_at,
             }
-            segment_notes = session.scalars(
-                select(Note).where(Note.str_created_ts > active_segment.str_start_at)
-            ).all()
         else:
             active_segment_dict = {"no_active_segment": "True"}
-            segment_notes = []
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"active_segment_dict": active_segment_dict, "segment_notes": segment_notes},
+        context={"active_segment_dict": active_segment_dict},
     )
 
 
@@ -88,16 +84,6 @@ async def delete_active_segment():
     return RedirectResponse(url=app.url_path_for("home"), status_code=303)
 
 
-@app.get("/add_note")
-async def add_note(note_text: str):
-    with Session() as session:
-        with session.begin():
-            new_note = Note(text=note_text)
-            new_note.dt_created_ts = datetime.now(tz=timezone.utc)
-            session.add(new_note)
-    return RedirectResponse(url=app.url_path_for("home"), status_code=303)
-
-
 @app.get("/download_segments_csv")
 async def download_segments_csv():
     with Session() as session:
@@ -111,21 +97,5 @@ async def download_segments_csv():
                 media_type="text/csv",
                 headers={
                     "Content-Disposition": f"attachment; filename=segments_{str_iso_now}.csv"
-                },
-            )
-
-@app.get("/download_notes_csv")
-async def download_notes_csv():
-    with Session() as session:
-        conn = session.connection()
-        df = pd.read_sql_table(table_name="notes", con=conn)
-        str_iso_now = datetime.now(tz=timezone.utc).strftime(format="%Y-%m-%d")
-        with io.StringIO() as sio:
-            df.to_csv(sio, index=False)
-            return Response(
-                content=sio.getvalue(),
-                media_type="text/csv",
-                headers={
-                    "Content-Disposition": f"attachment; filename=notes_{str_iso_now}.csv"
                 },
             )

@@ -60,20 +60,3 @@ class ActionSegment(Base):
         return f"{hours:02}:{minutes:02}:{seconds:02}"
 
 
-class Note(Base):
-    __tablename__ = "notes"
-    id: Mapped[int] = mapped_column(
-        Integer, primary_key=True, autoincrement=True, init=False
-    )
-    text: Mapped[str] = mapped_column(TEXT, nullable=False)
-    str_created_ts: Mapped[str] = mapped_column(TEXT, nullable=False, init=False)
-
-    @property
-    def dt_created_ts(self) -> datetime:
-        return datetime.strptime(self.str_created_ts, format=ISO_FMT_Z)
-
-    @dt_created_ts.setter
-    def dt_created_ts(self, dt: datetime):
-        if dt.tzinfo is None:
-            raise ValueError("datetime fields must be timezone aware")
-        self.str_created_ts = dt.strftime(ISO_FMT_Z)
